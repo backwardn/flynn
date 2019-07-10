@@ -122,12 +122,11 @@ main() {
   sudo mkdir -p "/var/lib/flynn/layer-cache"
   "${flynn_host}" run \
     --host    "${host}" \
-    --bind    "${ROOT}:${ROOT},/var/lib/flynn/layer-cache:/var/lib/flynn/layer-cache" \
+    --bind    "${ROOT}:/src,/var/lib/flynn/layer-cache:/var/lib/flynn/layer-cache" \
     --limits  "temp_disk=1G" \
-    --workdir "${ROOT}" \
+    --workdir "/src" \
     "${builder_image}" \
     /usr/bin/env \
-    GOPATH="${GOPATH}" \
     /bin/flynn-builder build ${args[@]}
 
   # extract binaries into build/bin

@@ -30,5 +30,9 @@ ln -s /opt/protoc/bin/protoc /usr/local/bin/protoc
 mkdir -p "${GOPATH}/src/github.com/flynn"
 ln -nfs "$(pwd)" "${GOPATH}/src/github.com/flynn/flynn"
 
+mkdir -p "${GOPATH}/pkg"
+mkdir -p "$(pwd)/build/gopkg"
+ln -nfs "$(pwd)/build/gopkg" "${GOPATH}/pkg"
+
 cp "builder/go-wrapper.sh" "/usr/local/bin/go"
 cp "builder/go-wrapper.sh" "/usr/local/bin/cgo"

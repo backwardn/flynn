@@ -6,6 +6,8 @@
 
 export GOROOT="/usr/local/go"
 export GOPATH="/go"
+export GO111MODULE=on
+export GOPROXY=https://proxy.golang.org
 
 if [[ $(basename $0) != "cgo" ]]; then
   export CGO_ENABLED=0
@@ -21,4 +23,4 @@ if [[ -n "${TUF_REPOSITORY}" ]]; then
   GO_LDFLAGS="${GO_LDFLAGS} -X github.com/flynn/flynn/pkg/tufconfig.Repository=${TUF_REPOSITORY}"
 fi
 
-${GOROOT}/bin/go $1 -ldflags "${GO_LDFLAGS}" ${@:2}
+${GOROOT}/bin/go $1 -mod=readonly -ldflags "${GO_LDFLAGS}" ${@:2}
