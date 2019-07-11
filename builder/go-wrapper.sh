@@ -24,4 +24,9 @@ if [[ -n "${TUF_REPOSITORY}" ]]; then
   GO_LDFLAGS="${GO_LDFLAGS} -X github.com/flynn/flynn/pkg/tufconfig.Repository=${TUF_REPOSITORY}"
 fi
 
-${GOROOT}/bin/go $1 -ldflags "${GO_LDFLAGS}" ${@:2}
+if [[ "$1" = "build" ]]; then
+	${GOROOT}/bin/go $1 -ldflags "${GO_LDFLAGS}" ${@:2}
+else
+	${GOROOT}/bin/go "$@"
+fi
+
