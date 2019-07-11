@@ -127,6 +127,7 @@ main() {
     --workdir "/src" \
     "${builder_image}" \
     /usr/bin/env \
+    GO111MODULE=on \
     /bin/flynn-builder build ${args[@]}
 
   # extract binaries into build/bin
