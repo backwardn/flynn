@@ -128,6 +128,7 @@ main() {
     "${builder_image}" \
     /usr/bin/env \
     GO111MODULE=on \
+    GOPROXY=https://proxy.golang.org \
     /bin/flynn-builder build ${args[@]}
 
   # extract binaries into build/bin
@@ -143,7 +144,6 @@ main() {
   extract_bin "builder"           "/bin/flynn-builder"
   extract_bin "discoverd"         "/bin/discoverd"
   extract_bin "test"              "/bin/flynn-test-file-server"
-  extract_bin "build-tools"       "/bin/dep"
   extract_bin "build-tools"       "/bin/tuf"
   extract_bin "build-tools"       "/bin/tuf-client"
   ln -nfs "flynn-linux-amd64" "${ROOT}/build/bin/flynn"
