@@ -39,20 +39,11 @@
       }]
     },
     {
-      "id": "go-bin",
+      "id": "go",
       "base": "ubuntu-bionic",
       "layers": [{
         "script": "builder/img/go.sh",
         "inputs": ["builder/go-wrapper.sh"],
-        "limits": { "temp_disk": "1G" }
-      }]
-    },
-    {
-      "id": "go",
-      "base": "go-bin",
-      "layers": [{
-        "script": "builder/img/go-download.sh",
-        "inputs": ["go.mod", "go.sum"],
         "limits": { "temp_disk": "1G" }
       }]
     },

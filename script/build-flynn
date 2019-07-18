@@ -119,6 +119,7 @@ main() {
   fi
   args+=("--tuf-db=/tmp/tuf.db")
 
+  mkdir -p "${ROOT}/build/gopath"
   sudo mkdir -p "/var/lib/flynn/layer-cache"
   "${flynn_host}" run \
     --host    "${host}" \
@@ -127,6 +128,7 @@ main() {
     --workdir "/src" \
     "${builder_image}" \
     /usr/bin/env \
+    GOPATH=/src/build/gopath \
     GO111MODULE=on \
     GOPROXY=https://proxy.golang.org \
     /bin/flynn-builder build ${args[@]}

@@ -5,7 +5,7 @@
 # before running the go tool.
 
 export GOROOT="/usr/local/go"
-export GOPATH="/go"
+export GOPATH="/src/build/gopath"
 export GO111MODULE=on
 export GOPROXY=https://proxy.golang.org
 export GOFLAGS=-mod=readonly

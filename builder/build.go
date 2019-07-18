@@ -350,6 +350,7 @@ func (b *Builder) Build(images []*Image) error {
 			// build Go binaries using the Go image
 			if l.BuildWith == "" && (len(l.GoBuild) > 0 || len(l.CGoBuild) > 0) {
 				l.BuildWith = "go"
+				l.Inputs = append(l.Inputs, "go.mod")
 			}
 			if l.BuildWith != "" {
 				addDependency(build, l.BuildWith)
