@@ -481,7 +481,13 @@ func (b *Builder) BuildImage(image *Image) error {
 					return err
 				}
 				inputs = append(inputs, i...)
-				run = append(run, fmt.Sprintf("go build -o %s %s", l.GoBuild[dir], filepath.Join("github.com/flynn/flynn", dir)))
+
+				pkg := dir
+				// if the path doesn't have a dot in it, it's not fully qualified, so prefix
+				if !strings.Contains(dir, ".") {
+					pkg = filepath.Join("github.com/flynn/flynn", dir)
+				}
+				run = append(run, fmt.Sprintf("go build -o %s %s", l.GoBuild[dir], pkg))
 			}
 			dirs = make([]string, 0, len(l.CGoBuild))
 			for dir := range l.CGoBuild {
