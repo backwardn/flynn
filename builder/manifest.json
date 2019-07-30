@@ -60,9 +60,9 @@
       "id": "build-tools",
       "base": "busybox",
       "layers": [{
-        "gobuild": {
-          "github.com/flynn/go-tuf/cmd/tuf": "/bin/tuf",
-          "github.com/flynn/go-tuf/cmd/tuf-client": "/bin/tuf-client"
+        "gobin": {
+          "github.com/flynn/go-tuf/cmd/tuf": "current",
+          "github.com/flynn/go-tuf/cmd/tuf-client": "current"
         }
       }]
     },

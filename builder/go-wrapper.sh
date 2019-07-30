@@ -5,10 +5,9 @@
 # before running the go tool.
 
 export GOROOT="/usr/local/go"
-export GOPATH="/src/build/gopath"
+export GOPATH="/go"
 export GO111MODULE=on
-export GOPROXY=https://proxy.golang.org
-export GOFLAGS=-mod=readonly
+export GOFLAGS=-mod=vendor
 
 if [[ $(basename $0) != "cgo" ]]; then
   export CGO_ENABLED=0

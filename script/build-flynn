@@ -119,7 +119,6 @@ main() {
   fi
   args+=("--tuf-db=/tmp/tuf.db")
 
-  mkdir -p "${ROOT}/build/gopath"
   sudo mkdir -p "/var/lib/flynn/layer-cache"
   "${flynn_host}" run \
     --host    "${host}" \
@@ -128,9 +127,8 @@ main() {
     --workdir "/src" \
     "${builder_image}" \
     /usr/bin/env \
-    GOPATH=/src/build/gopath \
     GO111MODULE=on \
-    GOPROXY=https://proxy.golang.org \
+    GOFLAGS=-mod=vendor
     /bin/flynn-builder build ${args[@]}
 
   # extract binaries into build/bin
@@ -146,8 +144,8 @@ main() {
   extract_bin "builder"           "/bin/flynn-builder"
   extract_bin "discoverd"         "/bin/discoverd"
   extract_bin "test"              "/bin/flynn-test-file-server"
-  extract_bin "build-tools"       "/bin/tuf"
-  extract_bin "build-tools"       "/bin/tuf-client"
+  extract_bin "build-tools"       "/go/bin/tuf"
+  extract_bin "build-tools"       "/go/bin/tuf-client"
   ln -nfs "flynn-linux-amd64" "${ROOT}/build/bin/flynn"
 
   # extract GOROOT from the Go image into build/_go and symlink

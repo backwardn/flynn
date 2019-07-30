@@ -71,6 +71,9 @@ type Builder struct {
 	goInputs    map[GoPlatform]*GoInputs
 	goInputsMtx sync.Mutex
 
+	// goModules is the set of go modules and their versions
+	goModules map[string]string
+
 	// tufConfig is the TUF config from the manifest
 	tufConfig *TUFConfig
 	tufClient *tuf.Client
@@ -134,6 +137,13 @@ type Layer struct {
 	// The go/build package is used to load the required source files which
 	// are then added as inputs.
 	CGoBuild map[string]string `json:"cgobuild,omitempty"`
+
+	// GoBin is a set of binaries to build using 'go get'.
+	//
+	// The map value is the version of the module to use, and the only
+	// valid value is current, which uses the version of the module in
+	// go.mod.
+	GoBin map[string]string `json:"gobuild,omitempty"`
 
 	// Copy is a set of inputs to copy into the layer
 	Copy map[string]string `json:"copy,omitempty"`
@@ -251,6 +261,11 @@ func runBuild(args *docopt.Args) error {
 		bar:      bar,
 	}
 
+	builder.goModules, err = getGoModules()
+	if err != nil {
+		return err
+	}
+
 	log.Info("building images")
 	if err := builder.Build(manifest.Images); err != nil {
 		return err
@@ -348,8 +363,10 @@ func (b *Builder) Build(images []*Image) error {
 		}
 		for _, l := range image.Layers {
 			// build Go binaries using the Go image
-			if l.BuildWith == "" && (len(l.GoBuild) > 0 || len(l.CGoBuild) > 0) {
+			if l.BuildWith == "" && (len(l.GoBuild) > 0 || len(l.CGoBuild) > 0 || len(l.GoBin) > 0) {
 				l.BuildWith = "go"
+			}
+			if len(l.GoBin) > 0 {
 				l.Inputs = append(l.Inputs, "go.mod")
 			}
 			if l.BuildWith != "" {
@@ -463,6 +480,25 @@ func (b *Builder) BuildImage(image *Image) error {
 			inputs = append(inputs, paths...)
 		}
 
+		if len(l.GoBin) > 0 {
+			for bin, version := range l.GoBin {
+				if version != "current" {
+					return fmt.Errorf(`invalid version %q for GoBin %q, it must be "current"`, version, bin)
+				}
+				var binMod string
+				for mod, modVersion := range g.goModules {
+					if strings.HasPrefix(bin, mod+"/") && len(mod) > len(binMod) {
+						binMod = mod
+						version = modVersion
+					}
+				}
+				if binMod == "" {
+					return fmt.Errorf("error finding matching module for GoBin %q", bin)
+				}
+				run = append(run, "go install %s@%s")
+			}
+		}
+
 		// if building Go binaries, load Go inputs for the configured
 		// GOOS / GOARCH and build with 'go build' / 'cgo build'
 		if len(l.GoBuild) > 0 || len(l.CGoBuild) > 0 {
@@ -481,13 +517,7 @@ func (b *Builder) BuildImage(image *Image) error {
 					return err
 				}
 				inputs = append(inputs, i...)
-
-				pkg := dir
-				// if the path doesn't have a dot in it, it's not fully qualified, so prefix
-				if !strings.Contains(dir, ".") {
-					pkg = filepath.Join("github.com/flynn/flynn", dir)
-				}
-				run = append(run, fmt.Sprintf("go build -o %s %s", l.GoBuild[dir], pkg))
+				run = append(run, fmt.Sprintf("go build -o %s %s", l.GoBuild[dir], filepath.Join("github.com/flynn/flynn", dir)))
 			}
 			dirs = make([]string, 0, len(l.CGoBuild))
 			for dir := range l.CGoBuild {
@@ -1212,4 +1242,25 @@ func (g *GoInputs) load(pkg string) ([]string, error) {
 	g.inputs[pkg] = inputs.([]string)
 	g.mtx.Unlock()
 	return inputs.([]string), nil
+}
+
+func getGoModules() (map[string]string, error) {
+	cmd := exec.Command("go", "list", "-json", "-m", "all")
+	out, err := cmd.Output()
+	if err != nil {
+		return err
+	}
+	d := json.NewDecoder(bytes.NewReader(out))
+	res := make(map[string]string)
+	for {
+		var mod struct {
+			Path    string
+			Version string
+		}
+		if err := d.Decode(&mod); err != nil {
+			return fmt.Errorf("error decoding `go list` module json: %s", err)
+		}
+		res[mod.Path] = mod.Version
+	}
+	return res, nil
 }

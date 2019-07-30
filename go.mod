@@ -63,7 +63,7 @@ require (
 	github.com/mrunalp/fileutils v0.0.0-20171103030105-7d4729fb3618 // indirect
 	github.com/natefinch/lumberjack v2.0.0+incompatible // indirect
 	github.com/olekukonko/ts v0.0.0-20140412220145-ecf753e7c962 // indirect
-	github.com/opencontainers/runc v0.0.0-00010101000000-000000000000
+	github.com/opencontainers/runc v1.0.0-rc8
 	github.com/opencontainers/runtime-spec v1.0.1 // indirect
 	github.com/opencontainers/selinux v1.2.2 // indirect
 	github.com/pkg/errors v0.8.0
@@ -72,7 +72,7 @@ require (
 	github.com/seccomp/libseccomp-golang v0.0.0-20160531183505-32f571b70023 // indirect
 	github.com/shopspring/decimal v0.0.0-20180709203117-cd690d0c9e24 // indirect
 	github.com/sirupsen/logrus v1.4.1 // indirect
-	github.com/smartystreets/goconvey v0.0.0-20190330032615-68dc04aab96a // indirect
+	github.com/smartystreets/goconvey v0.0.0-20190710185942-9d28bd7c0945 // indirect
 	github.com/stevvooe/resumable v0.0.0-20150521211217-51ad44105773
 	github.com/syndtr/gocapability v0.0.0-20180916011248-d98352740cb2 // indirect
 	github.com/tent/canonical-json-go v0.0.0-20130607151641-96e4ba3a7613
@@ -85,8 +85,8 @@ require (
 	golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45
 	golang.org/x/sys v0.0.0-20190626150813-e07cf5db2756
 	google.golang.org/api v0.7.0
-	google.golang.org/genproto v0.0.0-20190708153700-3bdd9d9f5532 // indirect
-	google.golang.org/grpc v1.22.0 // indirect
+	google.golang.org/genproto v0.0.0-20190716160619-c506a9f90610 // indirect
+	google.golang.org/grpc v1.22.1 // indirect
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	gopkg.in/inconshreveable/go-update.v0 v0.0.0-20150814200126-d8b0b1d421aa
 	gopkg.in/inconshreveable/log15.v2 v2.0.0-20180818164646-67afb5ed74ec // indirect
