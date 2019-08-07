@@ -1180,11 +1180,13 @@ func (s *server) CreateDeployment(req *protobuf.CreateDeploymentRequest, ds prot
 		// Scale release to requested processes/tags once deployment is complete
 		if de.Status == "complete" {
 			if sr := req.ScaleRequest; sr != nil {
-				s.createScale(&protobuf.CreateScaleRequest{
+				if _, err := s.createScale(&protobuf.CreateScaleRequest{
 					Parent:    fmt.Sprintf("apps/%s/releases/%s", de.AppID, de.ReleaseID),
 					Processes: sr.Processes,
 					Tags:      sr.Tags,
-				})
+				}); err != nil {
+					return err
+				}
 			}
 		}
 
