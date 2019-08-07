@@ -1196,10 +1196,10 @@ func (s *server) CreateDeployment(req *protobuf.CreateDeploymentRequest, ds prot
 			CreateTime: protobuf.NewTimestamp(event.CreatedAt),
 		})
 
-		if d.Status == "failed" {
+		if de.Status == "failed" {
 			return status.Errorf(codes.FailedPrecondition, de.Error)
 		}
-		if d.Status == "complete" {
+		if de.Status == "complete" {
 			break
 		}
 	}
