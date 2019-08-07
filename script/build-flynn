@@ -128,7 +128,8 @@ main() {
     "${builder_image}" \
     /usr/bin/env \
     GO111MODULE=on \
-    GOFLAGS=-mod=vendor
+    GOFLAGS=-mod=readonly \
+    GOPROXY=https://proxy.golang.org \
     /bin/flynn-builder build ${args[@]}
 
   # extract binaries into build/bin

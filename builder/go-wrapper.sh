@@ -7,7 +7,8 @@
 export GOROOT="/usr/local/go"
 export GOPATH="/go"
 export GO111MODULE=on
-export GOFLAGS=-mod=vendor
+export GOFLAGS=-mod=readonly
+export GOPROXY=https://proxy.golang.org
 
 if [[ $(basename $0) != "cgo" ]]; then
   export CGO_ENABLED=0
