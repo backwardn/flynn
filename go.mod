@@ -3,7 +3,7 @@ module github.com/flynn/flynn
 go 1.12
 
 require (
-	cloud.google.com/go v0.38.0
+	cloud.google.com/go v0.43.0
 	github.com/Azure/azure-sdk-for-go v0.0.0-20160912221952-63d3f3e3b12f
 	github.com/Azure/go-ansiterm v0.0.0-20170929234023-d6e3b3328b78
 	github.com/BurntSushi/toml v0.3.1
@@ -13,7 +13,7 @@ require (
 	github.com/checkpoint-restore/go-criu v0.0.0-20181120144056-17b0214f6c48 // indirect
 	github.com/cheggaaa/pb v0.0.0-20150223212723-0464652af750
 	github.com/containerd/console v0.0.0-20181022165439-0650fd9eeb50 // indirect
-	github.com/coreos/go-systemd v0.0.0-20160621134601-b32b8467dbea // indirect
+	github.com/coreos/go-systemd v0.0.0-20190719114852-fd7a80b32e1f // indirect
 	github.com/coreos/pkg v0.0.0-20160623183523-a48e304ff933 // indirect
 	github.com/cupcake/jsonschema v0.0.0-20160618151340-51bf6945446b
 	github.com/cyphar/filepath-securejoin v0.2.2 // indirect
@@ -32,11 +32,13 @@ require (
 	github.com/godbus/dbus v0.0.0-20160506222550-32c6cc29c145 // indirect
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/golang/groupcache v0.0.0-20160803200408-a6b377e3400b
-	github.com/google/go-cmp v0.3.0
+	github.com/google/go-cmp v0.3.1
+	github.com/google/pprof v0.0.0-20190723021845-34ac40c74b70 // indirect
 	github.com/gorilla/context v0.0.0-20140604161150-14f550f51af5
 	github.com/gorilla/securecookie v0.0.0-20140409111100-1b0c7f6e9ab3 // indirect
 	github.com/gorilla/sessions v0.0.0-20140613194357-aa5e036e6c44
 	github.com/hashicorp/go-msgpack v0.0.0-20150518234257-fa3f63826f7c // indirect
+	github.com/hashicorp/golang-lru v0.5.3 // indirect
 	github.com/hashicorp/raft v0.0.0-20160603202243-4bcac2adb069
 	github.com/hashicorp/raft-boltdb v0.0.0-20150201200839-d1e82c1ec3f1
 	github.com/howeyc/fsnotify v0.0.0-20140711012604-6b1ef893dc11 // indirect
@@ -50,8 +52,7 @@ require (
 	github.com/kardianos/osext v0.0.0-20150223151934-ccfcd0245381
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/kr/binarydist v0.0.0-20120828065244-9955b0ab8708 // indirect
-	github.com/kr/pretty v0.1.0 // indirect
-	github.com/kr/pty v1.1.1
+	github.com/kr/pty v1.1.8
 	github.com/krolaw/dhcp4 v0.0.0-20180925202202-7cead472c414
 	github.com/kylelemons/godebug v0.0.0-20131002215753-808ac284003c
 	github.com/mattn/go-colorable v0.0.0-20140924234614-043ae1629135
@@ -79,15 +80,15 @@ require (
 	github.com/vanillahsu/go_reuseport v0.0.0-20140603073948-087e013b0a0c
 	github.com/vishvananda/netlink v0.0.0-20170502164845-1e045880fbc2
 	github.com/vishvananda/netns v0.0.0-20170219233438-54f0e4339ce7 // indirect
-	go.opencensus.io v0.22.0 // indirect
-	golang.org/x/crypto v0.0.0-20190621222207-cc06ce4a13d4
-	golang.org/x/net v0.0.0-20190620200207-3b0461eec859
+	golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4
+	golang.org/x/mobile v0.0.0-20190806162312-597adff16ade // indirect
+	golang.org/x/net v0.0.0-20190724013045-ca1201d0de80
 	golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45
-	golang.org/x/sys v0.0.0-20190626150813-e07cf5db2756
+	golang.org/x/sys v0.0.0-20190804053845-51ab0e2deafa
+	golang.org/x/tools v0.0.0-20190807223507-b346f7fd45de // indirect
 	google.golang.org/api v0.7.0
-	google.golang.org/genproto v0.0.0-20190716160619-c506a9f90610 // indirect
+	google.golang.org/genproto v0.0.0-20190801165951-fa694d86fc64 // indirect
 	google.golang.org/grpc v1.22.1 // indirect
-	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	gopkg.in/inconshreveable/go-update.v0 v0.0.0-20150814200126-d8b0b1d421aa
 	gopkg.in/inconshreveable/log15.v2 v2.0.0-20180818164646-67afb5ed74ec // indirect
 	gopkg.in/mgo.v2 v2.0.0-20160609180028-29cc868a5ca6
@@ -96,6 +97,7 @@ require (
 	gopkg.in/vmihailenco/msgpack.v2 v2.9.1 // indirect
 	gopkg.in/yaml.v2 v2.0.0-20160301204022-a83829b6f129
 	gotest.tools v0.0.0-20181223230014-1083505acf35
+	honnef.co/go/tools v0.0.1-2019.2.2 // indirect
 )
 
 replace github.com/opencontainers/runc => github.com/flynn/runc v1.0.0-rc1000

@@ -13,6 +13,7 @@ import (
 	"io/ioutil"
 	"net"
 	"os"
+	osexec "os/exec"
 	"path/filepath"
 	"regexp"
 	"sort"
@@ -143,7 +144,7 @@ type Layer struct {
 	// The map value is the version of the module to use, and the only
 	// valid value is current, which uses the version of the module in
 	// go.mod.
-	GoBin map[string]string `json:"gobuild,omitempty"`
+	GoBin map[string]string `json:"gobin,omitempty"`
 
 	// Copy is a set of inputs to copy into the layer
 	Copy map[string]string `json:"copy,omitempty"`
@@ -365,9 +366,7 @@ func (b *Builder) Build(images []*Image) error {
 			// build Go binaries using the Go image
 			if l.BuildWith == "" && (len(l.GoBuild) > 0 || len(l.CGoBuild) > 0 || len(l.GoBin) > 0) {
 				l.BuildWith = "go"
-			}
-			if len(l.GoBin) > 0 {
-				l.Inputs = append(l.Inputs, "go.mod")
+				l.Inputs = append(l.Inputs, "go.mod", "go.sum")
 			}
 			if l.BuildWith != "" {
 				addDependency(build, l.BuildWith)
@@ -486,7 +485,7 @@ func (b *Builder) BuildImage(image *Image) error {
 					return fmt.Errorf(`invalid version %q for GoBin %q, it must be "current"`, version, bin)
 				}
 				var binMod string
-				for mod, modVersion := range g.goModules {
+				for mod, modVersion := range b.goModules {
 					if strings.HasPrefix(bin, mod+"/") && len(mod) > len(binMod) {
 						binMod = mod
 						version = modVersion
@@ -517,7 +516,7 @@ func (b *Builder) BuildImage(image *Image) error {
 					return err
 				}
 				inputs = append(inputs, i...)
-				run = append(run, fmt.Sprintf("go build -o %s %s", l.GoBuild[dir], filepath.Join("github.com/flynn/flynn", dir)))
+				run = append(run, fmt.Sprintf("go build -o %s %s", l.GoBuild[dir], "./"+dir))
 			}
 			dirs = make([]string, 0, len(l.CGoBuild))
 			for dir := range l.CGoBuild {
@@ -530,7 +529,7 @@ func (b *Builder) BuildImage(image *Image) error {
 					return err
 				}
 				inputs = append(inputs, i...)
-				run = append(run, fmt.Sprintf("cgo build -o %s %s", l.CGoBuild[dir], filepath.Join("github.com/flynn/flynn", dir)))
+				run = append(run, fmt.Sprintf("cgo build -o %s %s", l.CGoBuild[dir], "./"+dir))
 			}
 		}
 
@@ -859,6 +858,12 @@ func (b *Builder) BuildLayer(l *Layer, id, name string, run []string, env map[st
 	linuxCapabilities := append(host.DefaultCapabilities, l.LinuxCapabilities...)
 	job.Config.LinuxCapabilities = &linuxCapabilities
 
+	if l.Limits == nil {
+		l.Limits = make(map[string]string)
+	}
+	if l.Limits["temp_disk"] == "" {
+		l.Limits["temp_disk"] = "1G"
+	}
 	for typ, v := range l.Limits {
 		limit, err := resource.ParseLimit(resource.Type(typ), v)
 		if err != nil {
@@ -1245,10 +1250,10 @@ func (g *GoInputs) load(pkg string) ([]string, error) {
 }
 
 func getGoModules() (map[string]string, error) {
-	cmd := exec.Command("go", "list", "-json", "-m", "all")
+	cmd := osexec.Command("go", "list", "-json", "-m", "all")
 	out, err := cmd.Output()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	d := json.NewDecoder(bytes.NewReader(out))
 	res := make(map[string]string)
@@ -1258,7 +1263,10 @@ func getGoModules() (map[string]string, error) {
 			Version string
 		}
 		if err := d.Decode(&mod); err != nil {
-			return fmt.Errorf("error decoding `go list` module json: %s", err)
+			if err == io.EOF {
+				break
+			}
+			return nil, fmt.Errorf("error decoding `go list` module json: %s", err)
 		}
 		res[mod.Path] = mod.Version
 	}

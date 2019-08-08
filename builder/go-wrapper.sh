@@ -4,6 +4,8 @@
 # inside the Go image and sets some environment variables and flags
 # before running the go tool.
 
+set -e
+
 export GOROOT="/usr/local/go"
 export GOPATH="/go"
 export GO111MODULE=on
@@ -29,4 +31,3 @@ if [[ "$1" = "build" ]]; then
 else
 	${GOROOT}/bin/go "$@"
 fi
-

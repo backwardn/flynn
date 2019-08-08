@@ -34,8 +34,7 @@
     {
       "id": "busybox",
       "layers": [{
-        "script": "builder/img/busybox.sh",
-        "limits": { "temp_disk": "1G" }
+        "script": "builder/img/busybox.sh"
       }]
     },
     {
@@ -43,8 +42,7 @@
       "base": "ubuntu-bionic",
       "layers": [{
         "script": "builder/img/go.sh",
-        "inputs": ["builder/go-wrapper.sh"],
-        "limits": { "temp_disk": "1G" }
+        "inputs": ["builder/go-wrapper.sh"]
       }]
     },
     {
@@ -109,7 +107,6 @@
         },
         {
           "name": "host-binaries",
-          "limits": { "temp_disk": "1G" },
           "env": {
             "FLYNN_VERSION": "{{ .Version }}",
             "TUF_ROOT_KEYS": "{{ .TUFRootKeys }}"
@@ -445,8 +442,7 @@
           "inputs": [
             "slugbuilder/builder/buildpacks.txt",
             "slugbuilder/builder/install-buildpack"
-          ],
-          "limits": { "temp_disk": "1G" }
+          ]
         },
         {
           "name": "slugbuilder-binaries",
@@ -477,8 +473,7 @@
           "inputs": [
             "slugbuilder/builder/buildpacks.txt",
             "slugbuilder/builder/install-buildpack"
-          ],
-          "limits": { "temp_disk": "1G" }
+          ]
         },
         {
           "name": "slugbuilder-binaries",
@@ -540,8 +535,7 @@
         "inputs": [
           "dashboard/app/Gemfile",
           "dashboard/app/Gemfile.lock"
-        ],
-        "limits": { "temp_disk": "1G" }
+        ]
       }]
     },
     {
@@ -573,7 +567,7 @@
           "dashboard/app/vendor/javascripts/*.js",
           "dashboard/app/vendor/stylesheets/*.scss"
         ],
-        "limits": { "memory": "3G", "temp_disk": "1G" }
+        "limits": { "memory": "3G" }
       }]
     },
     {
@@ -586,8 +580,7 @@
         ],
         "gobuild": {
           "dashboard": "/bin/flynn-dashboard"
-        },
-        "limits": { "temp_disk": "1G" }
+        }
       }],
       "entrypoint": {
         "args": [
@@ -673,7 +666,6 @@
         },
         {
           "name": "test-binaries",
-          "limits": { "temp_disk": "1G" },
           "cgobuild": {
             "test":                  "/bin/flynn-test",
             "test/runner":           "/bin/flynn-test-runner"
@@ -709,8 +701,7 @@
         {
           "build_with": "ubuntu-bionic",
           "name": "test-apps-minio",
-          "script": "test/apps/minio.sh",
-          "limits": { "temp_disk": "1G" }
+          "script": "test/apps/minio.sh"
         },
         {
           "name": "test-apps-binaries",
@@ -738,8 +729,7 @@
         },
         "gobuild": {
           "cli": "/bin/flynn-${GOOS}-${GOARCH}"
-        },
-        "limits": { "temp_disk": "1G" }
+        }
       }]
     }
   },
